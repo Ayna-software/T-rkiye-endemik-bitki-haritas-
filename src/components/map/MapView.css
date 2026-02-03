@@ -1,0 +1,61 @@
+.map-view {
+  width: 100%;
+  height: 100%;
+}
+
+.map-view__container {
+  width: 100%;
+  height: 100%;
+}
+
+.map-tooltip {
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid #22c55e;
+  font-size: 12px;
+}
+
+/* Bölge yazı stilleri */
+.region-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+.region-tooltip:hover,
+.region-tooltip--hover {
+  background: rgba(16, 185, 129, 0.95) !important;
+  color: white !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.region-tooltip--selected {
+  background: rgba(16, 185, 129, 0.95) !important;
+  color: white !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+  animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+}
+

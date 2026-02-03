@@ -1,0 +1,48 @@
+/* Uygulamanın tek kolonlu yerleşimi */
+.layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0b1120;
+  color: #e5e7eb;
+}
+
+.layout-main {
+  flex: 1;
+  position: relative;
+  padding: 1rem;
+}
+
+.layout-map-column {
+  height: 100%;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #020617;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.8);
+}
+
+/* Side panel overlay olarak sağ üstte */
+.layout-side-column {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 380px;
+  max-width: 90vw;
+  height: calc(100vh - 2rem);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.layout-side-column > * {
+  pointer-events: auto;
+}
+
+@media (max-width: 900px) {
+  .layout-side-column {
+    width: 100%;
+    max-width: calc(100vw - 2rem);
+    right: 1rem;
+    left: 1rem;
+  }
+}
+

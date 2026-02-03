@@ -1,0 +1,163 @@
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: #1f2937;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  animation: slideInFade 0.4s ease-out;
+}
+
+@keyframes slideInFade {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.side-panel--hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.side-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.side-panel__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.side-panel__reset-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #6b7280;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.side-panel__reset-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.side-panel__section {
+  margin-bottom: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.side-panel__section-title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.side-panel__help {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.plant-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.plant-list__item {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.plant-list__item--active {
+  border-color: #10b981 !important;
+  background: #ecfdf5 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.plant-list__name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.plant-list__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.plant-list__latin {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.plant-list__description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.plant-list__empty {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .side-panel {
+    padding: 1rem;
+  }
+
+  .side-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
