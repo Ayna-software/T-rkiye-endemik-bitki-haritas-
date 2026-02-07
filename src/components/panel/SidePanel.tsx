@@ -43,10 +43,8 @@ export function SidePanel() {
                   type="button"
                   className={`plant-list__item ${isActive ? 'plant-list__item--active' : ''}`}
                   onClick={() => {
-                    selectPlant(plant.id)
-                    // Google'da yeni sekmede sadece latin adını arama yap
-                    const searchQuery = encodeURIComponent(plant.latinName)
-                    window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank')
+                    // Google search yerine, AI ile detay getir ve sol panelde göster
+                    selectPlant(plant.id, plant.name)
                   }}
                 >
                   <div className="plant-list__name-row">

@@ -1,0 +1,105 @@
+.detail-panel {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 380px;
+  max-width: 90vw;
+  height: calc(100% - 2rem);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  z-index: 2000;
+  overflow-y: auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: slideInFromLeft 0.4s ease-out;
+  color: #1f2937;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.detail-panel__close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.detail-panel__close-btn:hover {
+  background: #f3f4f6;
+  color: #ef4444;
+}
+
+.detail-panel__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #4b5563;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.detail-panel__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #064e3b;
+  border-bottom: 2px solid #a7f3d0;
+  padding-bottom: 0.5rem;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #047857;
+  margin-bottom: 0.5rem;
+}
+
+.detail-section p {
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.fun-fact {
+  background: #ecfdf5;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+}

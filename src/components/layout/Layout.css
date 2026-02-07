@@ -46,3 +46,20 @@
   }
 }
 
+/* Sol panel overlay olarak sol üstte */
+.layout-left-column {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 380px;
+  max-width: 90vw;
+  height: calc(100vh - 2rem);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.layout-left-column > * {
+  pointer-events: auto;
+}
+
+
