@@ -33,24 +33,38 @@ export const aiService = {
       if (isTrefle) {
         const token = API_KEY.trim()
         
-        // 1. Arama Yap
-        const searchUrl = `${API_URL}/species/search?q=${encodeURIComponent(plantName)}&token=${token}`
-        const searchRes = await fetch(searchUrl)
-        if (!searchRes.ok) throw new Error('Trefle API erişim hatası')
-        
-        const searchData = await searchRes.json()
-        const first = searchData?.data?.[0]
-        
-        let targetData = first
-        // Eğer arama sonucu yoksa veya çok genel bir sonuçsa, /plants/search dene
+        // 1. Arama Yap (Tam Ad ile)
+        const fetchSearch = async (query: string) => {
+            const res = await fetch(`${API_URL}/species/search?q=${encodeURIComponent(query)}&token=${token}`)
+            if (!res.ok) return null
+            const data = await res.json()
+            return data.data?.[0]
+        }
+
+        let targetData = await fetchSearch(plantName)
+
+        // Eğer sonuç yoksa ve isim 3 kelimeden fazlaysa (örn: Quercus macranthera syspirensis), 
+        // son kelimeyi atıp tekrar dene (Quercus macranthera)
+        if (!targetData) {
+            const parts = plantName.split(' ')
+            if (parts.length > 2) {
+                // Son parçayı çıkar (subspecies/variety ismini at)
+                const simplifiedName = parts.slice(0, 2).join(' ')
+                console.log(`Tam ad ile bulunamadı, "${simplifiedName}" deneniyor...`)
+                targetData = await fetchSearch(simplifiedName)
+            }
+        }
+
+        // Hala yoksa plants/search dene
         if (!targetData) {
            const altRes = await fetch(`${API_URL}/plants/search?q=${encodeURIComponent(plantName)}&token=${token}`)
            const altData = await altRes.json()
            targetData = altData?.data?.[0]
         }
 
+        // Hala yoksa hata
         if (!targetData) {
-          throw new Error('Bitki bulunamadı.')
+          throw new Error('Bitki veritabanında bulunamadı.')
         }
 
         // 2. Detay Çek
@@ -107,7 +121,6 @@ export const aiService = {
         
         let descParts = []
         
-        // "Ismi X, bilimsel adı X" tekrarını önle
         if (commonName && commonName.toLowerCase() !== sciName.toLowerCase()) {
             descParts.push(`${commonName}, bilimsel adıyla ${sciName} olarak bilinen bitkidir.`)
         } else {
@@ -137,7 +150,6 @@ export const aiService = {
         const humidityInfo = trHumidity(d.growth?.atmospheric_humidity)
         if (humidityInfo) habitatParts.push(humidityInfo + '.')
           
-        // "nullmm" hatası düzeltildi: precipitation varsa ve mm değeri null değilse
         if (d.growth?.minimum_precipitation && d.growth.minimum_precipitation.mm != null) {
              habitatParts.push(`Yıllık yağış isteği minimum ${d.growth.minimum_precipitation.mm}mm'dir.`)
         }
@@ -165,7 +177,6 @@ export const aiService = {
           : "Spesifik morfolojik özellikleri hakkında detaylı veri bulunamadı."
 
         // 4. BİLİYOR MUYDUNUZ? (Fun Fact)
-        // Kaynak yerine daha ilginç veriler
         let facts = []
         
         if (d.duration) {
@@ -180,9 +191,7 @@ export const aiService = {
             facts.push("Bazı kültürlerde sebze olarak tüketimi bilinmektedir.")
         }
         
-        // [object Object] hatası düzeltildi: string array mi object array mi kontrol et
         if (d.synonyms && Array.isArray(d.synonyms) && d.synonyms.length > 0) {
-            // Synonyms bazen { name: "...", author: "..." } objesi olabilir, bazen string.
             const synList = d.synonyms.map((s: any) => {
                 if (typeof s === 'string') return s;
                 if (typeof s === 'object' && s.name) return s.name;
@@ -194,14 +203,12 @@ export const aiService = {
             }
         }
 
-        // Eğer hiç fact yoksa, author/year koy, o da yoksa familya bilgisini tekrar et ama farklı dille.
         if (facts.length === 0) {
            if (d.author && d.year) {
                facts.push(`Bilimsel olarak ilk kez ${d.year} yılında ${d.author} tarafından tanımlanmıştır.`)
            } else if (d.family_common_name) {
                facts.push(`Halk arasında ${d.family_common_name} ailesinin bir üyesi olarak bilinir.`)
            } else if (d.bibliography) {
-                // Kaynak bilgisini "fun fact" gibi değil, referans cümlesi gibi verelim
                 facts.push(`Bu tür hakkındaki temel bilgiler ${d.bibliography} çalışmasına dayanmaktadır.`)
            } else {
                facts.push("Bu bitki doğadaki biyolojik çeşitliliğin eşsiz bir parçasıdır.")
@@ -225,12 +232,13 @@ export const aiService = {
 
     } catch (error) {
       console.error("AI Error:", error)
+      const err = error as Error
       return {
         description: "Bilgi alınırken bir hata oluştu.",
-        habitat: "Bağlantı sorunu.",
-        features: "Lütfen internet bağlantınızı veya API yapılandırmanızı kontrol edin.",
-        funFact: "Veri alınamadı.",
-        scientificName: ""
+        habitat: "Hata detayı: " + (err.message || String(error)),
+        features: "Aranan isimle ilgili kayıt veritabanında bulunamadı.",
+        funFact: "İnternet bağlantısınız ve API anahtarınızı kontrol edin.",
+        scientificName: plantName
       }
     }
   }
