@@ -6,10 +6,6 @@ export function DetailPanel() {
   const isDetailsLoading = useMapStore((s) => s.isDetailsLoading)
   const plantDetails = useMapStore((s) => s.plantDetails)
   const closeDetailPanel = useMapStore((s) => s.closeDetailPanel)
-  const selectedPlantId = useMapStore((s) => s.selectedPlantId)
-
-  // Bu bitkinin adını (latin veya normal) bulmak için plants array'e erişmemiz gerekebilir
-  // ama şimdilik detaylarda zaten genel bilgi var.
 
   if (!isDetailPanelOpen) return null
 
@@ -26,10 +22,20 @@ export function DetailPanel() {
         </div>
       ) : plantDetails ? (
         <div className="detail-panel__content">
-          <h2 className="detail-panel__title">Bitki Detayları (AI)</h2>
+          <h2 className="detail-panel__title">Bitki Detayları</h2>
+
+          {plantDetails.imageUrl && (
+            <div style={{ marginBottom: '1rem' }}>
+              <img 
+                src={plantDetails.imageUrl} 
+                alt="Bitki görseli" 
+                style={{ width: '100%', borderRadius: 8, objectFit: 'cover' }} 
+              />
+            </div>
+          )}
           
           <div className="detail-section">
-            <h3>Genel Bilgi</h3>
+            <h3>Genel Tanım</h3>
             <p>{plantDetails.description}</p>
           </div>
 

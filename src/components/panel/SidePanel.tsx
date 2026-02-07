@@ -47,8 +47,8 @@ export function SidePanel() {
                   type="button"
                   className={`plant-list__item ${isActive ? 'plant-list__item--active' : ''}`}
                   onClick={() => {
-                    // Google search yerine, AI ile detay getir ve sol panelde göster
-                    selectPlant(plant.id, plant.name)
+                    // AI/Trefle ile detay getir – arama doğruluğu için latin adı kullan
+                    selectPlant(plant.id, plant.latinName)
                   }}
                 >
                   <div className="plant-list__name-row">

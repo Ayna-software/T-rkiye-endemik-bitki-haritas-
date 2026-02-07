@@ -68,13 +68,14 @@ export const useMapStore = create<MapStore>((set) => ({
       })
     } catch (error) {
       console.error("AI veri çekme hatası:", error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
       set({
         isDetailsLoading: false,
         // Hata durumunda boş veya hata mesajı
         plantDetails: {
-          description: "Bilgi alınamadı.",
+          description: `Bilgi alınamadı. Hata detayı: ${errorMessage}`,
           habitat: "-",
-          features: "-",
+          features: "Lütfen API anahtarını ve bağlantı ayarlarını kontrol edin.",
           funFact: "-"
         }
       })
