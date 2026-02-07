@@ -24,6 +24,8 @@ interface MapActions {
   resetToRegions: () => void
   // Detay panelini kapatma
   closeDetailPanel: () => void
+  // Sağ paneli (ve dolayısıyla bölge seçimini) kapatma
+  closeSidePanel: () => void
 }
 
 export type MapStore = MapState & MapActions
@@ -89,6 +91,15 @@ export const useMapStore = create<MapStore>((set) => ({
       isDetailPanelOpen: false
     })),
 
-  closeDetailPanel: () => set({ isDetailPanelOpen: false })
+  closeDetailPanel: () => set({ isDetailPanelOpen: false }),
+
+  closeSidePanel: () =>
+    set(() => ({
+      level: 'region',
+      selectedRegionId: null,
+      selectedPlantId: null,
+      plantDetails: null,
+      isDetailPanelOpen: false
+    }))
 }))
 

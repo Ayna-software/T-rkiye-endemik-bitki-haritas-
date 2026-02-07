@@ -15,6 +15,12 @@
   transition: transform 0.3s ease, opacity 0.3s ease;
   animation: slideInFromLeft 0.4s ease-out;
   color: #1f2937;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.detail-panel::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes slideInFromLeft {

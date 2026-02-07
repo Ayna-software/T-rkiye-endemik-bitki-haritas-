@@ -13,6 +13,7 @@ export function SidePanel() {
   const selectedPlantId = useMapStore((s) => s.selectedPlantId)
   const selectPlant = useMapStore((s) => s.selectPlant)
   const resetToRegions = useMapStore((s) => s.resetToRegions)
+  const closeSidePanel = useMapStore((s) => s.closeSidePanel)
 
   const filteredPlants = useMemo(() => {
     if (!selectedRegionId) return []
@@ -23,6 +24,9 @@ export function SidePanel() {
 
   return (
     <div className={`side-panel ${!isVisible ? 'side-panel--hidden' : ''}`}>
+      <button className="side-panel__close-btn" onClick={closeSidePanel}>
+        ×
+      </button>
       <header className="side-panel__header">
         <h1 className="side-panel__title">Türkiye Endemik Bitkileri</h1>
         {level === 'province' && (
