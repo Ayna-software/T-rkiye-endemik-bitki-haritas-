@@ -1,0 +1,4 @@
+{
+  "VITE_AI_API_URL": "https://generativelanguage.googleapis.com",
+  "VITE_AI_API_KEY": ""
+}
