@@ -21,7 +21,7 @@ export const aiService = {
         description: `${plantName} (Mock Veri) - API Anahtarı eksik olduğu için özet gösteriliyor.`,
         habitat: "Bölgesel olarak değişir; örnek habitat bilgisi mevcut değil.",
         features: "Detaylar mevcut değil.",
-        funFact: ".env dosyanıza VITE_AI_API_KEY eklerseniz gerçek veriler gösterilecektir.",
+        funFact: "Bu türle ilgili daha fazla saha gözlemi eklendikçe içerik zenginleşecektir.",
         scientificName: plantName
       }
     }
@@ -31,7 +31,7 @@ export const aiService = {
     //   doğrudan sağlanan LLM endpoint'ine bir istek gönderilir (client-side). Bu dosya
     //   hem Google Generative (Gemini) hem OpenAI tarzı endpoint'leri esnekçe ele alır.
 
-    const model = (import.meta.env.VITE_AI_MODEL as string) || 'gemini-2.5-flash'
+    const model = (import.meta.env.VITE_AI_MODEL as string) || 'gemini-3-flash'
 
     const buildPrompt = (name: string) => {
       return `${name} bitkisini kısaca Türkçe olarak özetle.
@@ -65,13 +65,27 @@ JSON formatında cevap ver:
       }
     }
 
+    const buildGoogleEndpoint = (baseUrl: string, modelName: string) => {
+      const trimmed = baseUrl.trim()
+      const isFullGenerativeEndpoint =
+        trimmed.includes('/v1/models/') && trimmed.includes(':generateContent')
+
+      if (isFullGenerativeEndpoint) {
+        return trimmed
+      }
+
+      return `${trimmed.replace(/\/+$/, '')}/v1/models/${modelName}:generateContent?key=${encodeURIComponent(key)}`
+    }
+
+
     // Öncelik sırası (en yüksek -> en düşük):
     // 1) runtime config: `window.__AI_CONFIG__` veya `public/ai-config.json` (isteğe bağlı)
     // 2) build-time .env (import.meta.env)
     let apiUrl = API_URL
     let key = API_KEY.trim()
+    let runtimeModel = model
     
-    console.log('Initial config from .env:', { apiUrl: apiUrl.slice(0, 30) + '...', key: key.slice(-10) })
+    console.log('Initial config from .env:', { apiUrl: apiUrl.slice(0, 30) + '...', key: key.slice(-10), model: runtimeModel })
 
     // Try to load runtime config from window or public/ai-config.json
     try {
@@ -80,6 +94,7 @@ JSON formatında cevap ver:
         console.log('Found window.__AI_CONFIG__')
         if (winCfg.VITE_AI_API_URL) apiUrl = winCfg.VITE_AI_API_URL
         if (winCfg.VITE_AI_API_KEY) key = String(winCfg.VITE_AI_API_KEY).trim()
+        if (winCfg.VITE_AI_MODEL) runtimeModel = String(winCfg.VITE_AI_MODEL).trim()
       } else {
         // fetch public/ai-config.json (editable without rebuilding the app)
         console.log('Attempting to fetch /ai-config.json')
@@ -96,6 +111,7 @@ JSON formatında cevap ver:
             console.log('Loaded ai-config.json successfully')
             if (cfg.VITE_AI_API_URL) apiUrl = cfg.VITE_AI_API_URL
             if (cfg.VITE_AI_API_KEY) key = String(cfg.VITE_AI_API_KEY).trim()
+            if (cfg.VITE_AI_MODEL) runtimeModel = String(cfg.VITE_AI_MODEL).trim()
           }
         }
       }
@@ -166,13 +182,15 @@ JSON formatında cevap ver:
       const isGoogleGenerative = apiUrl.includes('generativelanguage.googleapis.com') || apiUrl.includes('googleapis.com') || apiUrl.includes('gemini')
 
       if (isGoogleGenerative) {
-        // Google Generative API (Gemini) endpoint
-        const baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl
-        // v1 endpoint (gemini-2.5-flash için)
-        const endpoint = `${baseUrl}/v1/models/${model}:generateContent?key=${encodeURIComponent(key)}`
-        console.log('Calling Google Generative API:', { endpoint, model, key: key.slice(0, 10) + '...' })
+        const endpoint = buildGoogleEndpoint(apiUrl, runtimeModel)
 
-        const res = await fetch(endpoint, {
+        console.log('Calling Google Generative API:', {
+          endpoint,
+          model: runtimeModel,
+          key: key ? key.slice(0, 10) + '...' : 'NO_KEY'
+        })
+
+        let res = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -196,10 +214,34 @@ JSON formatında cevap ver:
 
         if (!res.ok) {
           const errorText = await res.text().catch(() => '')
+          const modelNotFound =
+            res.status === 404 && /models\/.+\s+is not found|not found for API version/i.test(errorText)
+          const rateLimitOrBusy = [429, 503].includes(res.status)
+
+          if (modelNotFound) {
+            console.error('Google API unsupported model:', {
+              model: runtimeModel,
+              status: res.status,
+              endpoint,
+              body: errorText.slice(0, 500)
+            })
+            throw new Error(`Google API model desteklenmiyor: ${runtimeModel}. .env veya ai-config ayarlarını kontrol edin.`)
+          }
+
+          if (rateLimitOrBusy) {
+            console.error('Google API rate-limit/high-demand error:', {
+              model: runtimeModel,
+              status: res.status,
+              endpoint,
+              body: errorText.slice(0, 500)
+            })
+            throw new Error(`Google API yoğun: ${errorText.slice(0, 150)}`)
+          }
+
           console.error('Google API HTTP Error:', {
             status: res.status,
             statusText: res.statusText,
-            endpoint: endpoint,
+            endpoint,
             body: errorText.slice(0, 500)
           })
           throw new Error(`Google API error (${res.status}): ${errorText.slice(0, 150)}`)
@@ -288,7 +330,7 @@ JSON formatında cevap ver:
         description: 'Bilgi alınırken bir hata oluştu.',
         habitat: 'Hata detayı: ' + (err.message || String(error)),
         features: 'Aranan isimle ilgili kayıt veritabanında bulunamadı.',
-        funFact: 'Lütfen .env içindeki VITE_AI_API_KEY ve VITE_AI_API_URL ayarlarını kontrol edin.',
+        funFact: 'Bu kayıt için temel bilgi gösteriliyor; daha sonra tekrar detay alınabilir.',
         scientificName: plantName
       }
     }

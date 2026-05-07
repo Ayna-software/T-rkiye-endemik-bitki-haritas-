@@ -83,6 +83,23 @@
   color: #111827;
 }
 
+.side-panel__add-btn {
+  margin-bottom: 0.75rem;
+  width: 100%;
+  border: 1px solid #10b981;
+  background: #ecfdf5;
+  color: #065f46;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+}
+
+.side-panel__add-btn:hover {
+  background: #d1fae5;
+}
+
 .side-panel__help {
   margin: 0;
   font-size: 0.9rem;
@@ -179,6 +196,100 @@
   padding: 2rem 1rem;
   background: #f9fafb;
   border-radius: 8px;
+}
+
+.side-panel__feedback {
+  margin-top: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.75rem;
+}
+
+.side-panel__feedback.success {
+  background: #ecfdf5;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.side-panel__feedback.error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.add-plant-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.4);
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+}
+
+.add-plant-modal {
+  width: min(92%, 360px);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+}
+
+.add-plant-modal__title {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.add-plant-modal__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.add-plant-modal__field {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  color: #374151;
+}
+
+.add-plant-modal__field input,
+.add-plant-modal__field textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.add-plant-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.add-plant-modal__cancel-btn,
+.add-plant-modal__submit-btn {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+.add-plant-modal__cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.add-plant-modal__submit-btn {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.add-plant-modal__submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 900px) {

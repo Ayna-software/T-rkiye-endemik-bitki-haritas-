@@ -26,3 +26,8 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+backend/users.db
+
+# Python cache artifacts
+__pycache__/
+*.py[cod]

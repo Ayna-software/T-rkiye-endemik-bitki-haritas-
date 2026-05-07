@@ -16,6 +16,12 @@ export default defineConfig({
         target: 'https://trefle.io/api/v1',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/trefle/, '')
+      },
+      // Flask auth API proxy
+      '/api': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }
