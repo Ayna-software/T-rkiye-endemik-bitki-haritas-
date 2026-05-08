@@ -12,7 +12,9 @@ VITE_API_BASE_URL=/api
 
 Notlar:
 - `.env` içindeki değişiklikleri uygulamak için geliştirme sunucusunu (`npm run dev`) yeniden başlatmanız gerekir (Vite değişkenleri build-time olarak inject edilir).
--`npm run dev`hata verirse `pnpm install`komutunu kullan.
+
+- `npm run dev` hata verirse `pnpm install` komutunu kullan!
+
 - Hızlı, rebuild gerektirmeyen runtime yapılandırması için proje kökünde `public/ai-config.json` dosyasını düzenleyebilirsiniz; uygulama çalışma zamanında bu dosyayı okur. Bu dosyayı düzenleyip sayfayı yenilemeniz yeterlidir.
 
 ## Kullanici giris sistemi (Flask + SQLite)
