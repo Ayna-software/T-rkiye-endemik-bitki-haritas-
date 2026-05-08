@@ -6,12 +6,13 @@ React-Vite ile geliştirilmiş Türkiye endemik bitki haritası web uygulaması
 ```
 VITE_AI_API_KEY=YOUR_KEY_HERE
 VITE_AI_API_URL=https://generativelanguage.googleapis.com
-VITE_AI_MODEL=gemini-1.5-flash
+VITE_AI_MODEL=YOUR_KEY_MODEL
 VITE_API_BASE_URL=/api
 ```
 
 Notlar:
 - `.env` içindeki değişiklikleri uygulamak için geliştirme sunucusunu (`npm run dev`) yeniden başlatmanız gerekir (Vite değişkenleri build-time olarak inject edilir).
+-`npm run dev`hata verirse `pnpm install`komutunu kullan.
 - Hızlı, rebuild gerektirmeyen runtime yapılandırması için proje kökünde `public/ai-config.json` dosyasını düzenleyebilirsiniz; uygulama çalışma zamanında bu dosyayı okur. Bu dosyayı düzenleyip sayfayı yenilemeniz yeterlidir.
 
 ## Kullanici giris sistemi (Flask + SQLite)
