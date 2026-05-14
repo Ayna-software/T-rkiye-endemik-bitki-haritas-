@@ -138,14 +138,19 @@ export function SidePanel({ username }: SidePanelProps) {
   }
 
   const isVisible = Boolean(selectedRegionId)
+  const hasAccountBadge = Boolean(username)
 
   return (
-    <div className={`side-panel ${!isVisible ? 'side-panel--hidden' : ''}`}>
+    <div
+      className={`side-panel ${!isVisible ? 'side-panel--hidden' : ''} ${
+        hasAccountBadge ? 'side-panel--account-space' : ''
+      }`}
+    >
       <button className="side-panel__close-btn" onClick={closeSidePanel}>
         ×
       </button>
       <header className="side-panel__header">
-        <h1 className="side-panel__title">Türkiye Endemik Bitkileri</h1>
+        <h1 className="side-panel__title">Endemik Bitkileri</h1>
         {level === 'province' && (
           <button type="button" className="side-panel__reset-btn" onClick={resetToRegions}>
             ← Bölgelere Dön
@@ -154,8 +159,7 @@ export function SidePanel({ username }: SidePanelProps) {
       </header>
 
       <section className="side-panel__section">
-        <h2 className="side-panel__section-title">Endemik Bitkiler</h2>
-        {sessionUsername && (
+        {sessionUsername && sessionUsername !== 'Misafir' && (
           <button
             type="button"
             className="side-panel__add-btn"

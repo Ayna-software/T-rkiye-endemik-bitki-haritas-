@@ -12,7 +12,7 @@ export function DetailPanel() {
   return (
     <div className={`detail-panel ${isDetailPanelOpen ? 'detail-panel--open' : ''}`}>
       <button className="detail-panel__close-btn" onClick={closeDetailPanel}>
-        × Kapat
+        ×
       </button>
 
       {isDetailsLoading ? (

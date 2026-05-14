@@ -75,85 +75,121 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     }
   }
 
-  const handleBackdropClick = (event: React.MouseEvent<HTMLMainElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose()
-    }
+  const handleGuestLogin = () => {
+    onSuccess('Misafir')
   }
 
   return (
-    <main className="auth-page" onClick={handleBackdropClick}>
-      <section className="auth-card">
-        <div className="auth-tabs">
-          <button
-            className={mode === 'login' ? 'auth-tab active' : 'auth-tab'}
-            type="button"
-            onClick={() => {
-              setMode('login')
-              setMessage('')
-              setIsError(false)
-            }}
-          >
-            Giriş Yap
-          </button>
-          <button
-            className={mode === 'register' ? 'auth-tab active' : 'auth-tab'}
-            type="button"
-            onClick={() => {
-              setMode('register')
-              setMessage('')
-              setIsError(false)
-            }}
-          >
-            Kayıt Ol
-          </button>
+    <main className="auth-page">
+      <section className="auth-card auth-card--split">
+        <div className="auth-hero">
+          <span className="auth-hero__eyebrow">Türkiye Endemik Bitki Haritası</span>
+          <h1 className="auth-hero__title">Doğayı keşfet, bitkileri incele, katkı bırak.</h1>
+          <p className="auth-hero__text">
+            Haritaya giriş yaparak bölgelere göre endemik bitkileri keşfedebilir veya
+            misafir olarak hızlıca gezinebilirsiniz.
+          </p>
+          <div className="auth-hero__stats">
+            <div>
+              <strong>81</strong>
+              <span>il keşfi</span>
+            </div>
+            <div>
+              <strong>2 mod</strong>
+              <span>giriş / kayıt</span>
+            </div>
+            <div>
+              <strong>1 tık</strong>
+              <span>misafir erişimi</span>
+            </div>
+          </div>
         </div>
 
-        <form className="auth-form" onSubmit={onSubmit}>
-          {mode === 'register' && (
-            <label className="auth-field">
-              Kullanıcı Adı
-              <input
-                type="text"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                required
-                minLength={3}
-              />
-            </label>
+        <div className="auth-panel">
+          <div className={`auth-tabs auth-tabs--${mode}`}>
+            <div className="auth-tabs__thumb" aria-hidden="true" />
+            <button
+              className={mode === 'login' ? 'auth-tab auth-tab--active' : 'auth-tab'}
+              type="button"
+              onClick={() => {
+                setMode('login')
+                setMessage('')
+                setIsError(false)
+              }}
+            >
+              Giriş Yap
+            </button>
+            <button
+              className={mode === 'register' ? 'auth-tab auth-tab--active' : 'auth-tab'}
+              type="button"
+              onClick={() => {
+                setMode('register')
+                setMessage('')
+                setIsError(false)
+              }}
+            >
+              Kayıt Ol
+            </button>
+          </div>
+
+          <form className={`auth-form auth-form--${mode}`} onSubmit={onSubmit}>
+            <div className="auth-form__fields">
+              <label className={`auth-field ${mode === 'login' ? 'auth-field--ghost' : ''}`}>
+                Kullanıcı Adı
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  required={mode === 'register'}
+                  minLength={3}
+                  tabIndex={mode === 'login' ? -1 : 0}
+                  aria-hidden={mode === 'login'}
+                />
+              </label>
+
+              <label className="auth-field">
+                E-posta
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                />
+              </label>
+
+              <label className="auth-field">
+                Şifre
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  minLength={6}
+                />
+              </label>
+            </div>
+
+            <div className={`auth-form__actions auth-form__actions--split`}>
+              <button className="auth-submit" type="submit" disabled={isLoading}>
+                {isLoading ? 'Bekleyin...' : mode === 'login' ? 'Giriş Yap' : 'Kayıt Ol'}
+              </button>
+
+              {mode === 'login' ? (
+                <button className="auth-guest-btn" type="button" onClick={handleGuestLogin}>
+                  Misafir olarak devam et
+                </button>
+              ) : (
+                <div className="auth-guest-btn auth-guest-btn--ghost" aria-hidden="true" />
+              )}
+            </div>
+          </form>
+
+          {message && (
+            <p className={isError ? 'auth-message error' : 'auth-message success'}>
+              {message}
+            </p>
           )}
-
-          <label className="auth-field">
-            E-posta
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </label>
-
-          <label className="auth-field">
-            Şifre
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              minLength={6}
-            />
-          </label>
-
-          <button className="auth-submit" type="submit" disabled={isLoading}>
-            {isLoading ? 'Bekleyin...' : mode === 'login' ? 'Giriş Yap' : 'Kayıt Ol'}
-          </button>
-        </form>
-
-        {message && (
-          <p className={isError ? 'auth-message error' : 'auth-message success'}>
-            {message}
-          </p>
-        )}
+        </div>
       </section>
     </main>
   )
